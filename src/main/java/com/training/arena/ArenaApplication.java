@@ -9,11 +9,12 @@ public class ArenaApplication {
 
 	public static void main(String[] args) {
 		System.out.println("Hello world");
-		List<Creature> creatureList = new CreaturesFactory().randomCreatureList(3);
+		List<Creature> creatureList = new CreaturesFactory().randomCreatureList(2);
+		FightService fightService = new FightService();
 //
-		for (Creature creature: creatureList){
-            System.out.println("Creature: " + creature.toString().replace('\n', ' '));
+		while (creatureList.get(0).getLifePoints() > 0 && creatureList.get(1).getLifePoints() > 0){
+		    fightService.fight(creatureList.get(0), creatureList.get(1));
         }
-        new FightService().fight(creatureList.get(0), creatureList.get(1));
+
 	}
 }

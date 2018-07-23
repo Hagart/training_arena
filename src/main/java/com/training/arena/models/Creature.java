@@ -2,6 +2,8 @@ package com.training.arena.models;
 
 import com.training.arena.services.Fightable;
 
+import java.util.Random;
+
 public abstract class Creature implements Fightable {
     private Integer strength;
     private Integer dexterity;
@@ -12,6 +14,11 @@ public abstract class Creature implements Fightable {
     private Integer numberOfDodges;
     private Integer lifePoints;
     private CreatureType creatureType;
+
+    private Random random = new Random();
+    private int random(int min, int max){
+        return random.nextInt(max - min + 1) + min;
+    }
 
     Creature(CreatureType creatureType, Integer strength, Integer dexterity, Integer initiative, Integer velocity, Integer endurance,
                          Integer numberOfAttacks, Integer numberOfDodges, Integer lifePoints){
@@ -26,8 +33,32 @@ public abstract class Creature implements Fightable {
         this.lifePoints = lifePoints;
     }
 
-    public int attack(Creature target){return 0;}
-    public void dodge(int potentialDamage, Creature attacker){}
+    public int attack(Creature target){
+        if(dexterity > random(0,20)){
+            int potentialDamage = this.strength + random(0,3);
+            System.out.println("Good Attack! Will " + creatureType + " hit for " + potentialDamage + " damage?");
+            return potentialDamage;
+        }
+        else {
+            System.out.println(creatureType + " missed!");
+            return 0;
+        }
+    }
+    public void dodge(int potentialDamage, Creature attacker){
+        if (initiative > random(0,20)){
+            System.out.println("Haha! " + creatureType + " dodged!");
+        }
+        else {
+            int actualDamage = potentialDamage - endurance;
+            if (actualDamage > 0){
+                lifePoints -= actualDamage;
+                System.out.println(creatureType + " lost " + actualDamage + " life points");
+            }
+        }
+        if (lifePoints < 1){
+            System.out.println(creatureType + " fainted!");
+        }
+    }
 
     public Integer getStrength() {
         return strength;
